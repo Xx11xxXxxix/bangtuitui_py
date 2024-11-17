@@ -31,4 +31,4 @@ def get_request_data(request):
 
 
 def get_version():
-    return "1.0.0"  # 你可以根据实际需求返回当前系统版本
+    return "1.0.0"

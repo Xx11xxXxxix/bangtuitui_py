@@ -17,7 +17,7 @@ class PermissionService:
             menus = Access.get_list()
         else:
             menus = Access.get_list_by_user(self.user['shop_user_id'])
-            print(menus)
+
 
             for menu in menus:
                 if menu.get('redirect_name') != menu.get('children', [{}])[0].get('path'):
