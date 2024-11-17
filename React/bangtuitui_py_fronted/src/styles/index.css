@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+/* Antd 自定义样式 */
+@layer components {
+  .ant-layout-sider {
+    @apply shadow-md;
+  }
+
+  .ant-menu-item {
+    @apply mx-2 my-1 rounded !important;
+  }
+
+  .ant-menu-item-selected {
+    @apply bg-blue-50 !important;
+  }
+}
+
+/* 其他自定义样式 */
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+/* 深色模式 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
+  }
+}
+
+/* 浅色模式 */
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+}
