@@ -107,7 +107,7 @@ DATABASES = {
         'NAME': 'bangtuitui_py',  # 数据库名
         'USER': 'root',  # 用户名
         'PASSWORD': '123123',  # 密码
-        'HOST': 'localhost',  # 数据库服务器地址
+        'HOST': 'localhost',  # 数据库服务器地
         'PORT': 3306,
     }
 }
