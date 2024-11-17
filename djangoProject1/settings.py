@@ -30,6 +30,10 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # React
+    "http://localhost:3020",#node
+]
 
 INSTALLED_APPS = [
     'django.contrib.auth',
@@ -42,16 +46,34 @@ INSTALLED_APPS = [
     'models',
     'models.goods',
     'permissions',
+    'corsheaders',
+    'music_api',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+]
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'token',
+    'x-requested-with',
 ]
 
 ROOT_URLCONF = 'djangoProject1.urls'
@@ -84,7 +106,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',  # 数据库类型
         'NAME': 'bangtuitui_py',  # 数据库名
         'USER': 'root',  # 用户名
-        'PASSWORD': 'root',  # 密码
+        'PASSWORD': '123123',  # 密码
         'HOST': 'localhost',  # 数据库服务器地址
         'PORT': 3306,
     }
