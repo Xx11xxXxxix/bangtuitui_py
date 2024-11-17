@@ -110,11 +110,8 @@ class Product(models.Model):
         return query.order_by('product_sort', '-create_time')
 
     def get_many_spec_data(self, spec_rel, sku_data):
-        """商品多规格信息处理（示例）"""
         spec_attr_data = []
         spec_list_data = []
-        # 处理 spec_rel 和 sku_data，生成所需格式的数据
-        # 该部分可以根据实际业务需求实现
         return {'spec_attr': spec_attr_data, 'spec_list': spec_list_data}
 
     # def tags(self):
