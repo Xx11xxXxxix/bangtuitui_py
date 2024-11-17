@@ -12,8 +12,13 @@ import logging
 
 from jwt.exceptions import InvalidSignatureError, ExpiredSignatureError, InvalidTokenError
 
-from models.User.UserRole import UserRole
-from services.Authservice import AuthService
+from permissions.models import UserRole
+from permissions.serveices import AuthService
+
+# from models.User.UserRole import UserRole
+# from services.Authservice import AuthService
+
+# from services.Authservice import AuthService
 
 logger = logging.getLogger(__name__)
 
@@ -60,7 +65,6 @@ class BaseController(View):
         # if user_data.get('type') != 'shop':
         #     return False
         from admin.denglu.models import User
-        print(user_data.get('user_id'))
 
         user = User.objects.filter(shop_user_id=user_data.get('user_id')).first()
         request.user = user

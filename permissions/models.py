@@ -1,6 +1,6 @@
 from typing import List
 from django.db import models
-
+from django.conf import settings
 
 class Access(models.Model):
     access_id = models.AutoField(primary_key=True, db_column='access_id')
@@ -90,11 +90,9 @@ class Access(models.Model):
 
     @classmethod
     def get_list_by_user(cls,shop_user_id):
-        from models.Role.RoleAccess import RoleAccess
-        from models.User.UserRole import UserRole
-
         """用户权限菜单"""
         #用户角色
+        all_roles = UserRole.objects.all()
         role_ids=UserRole.objects.filter(
             shop_user_id=shop_user_id,
         ).values_list('role_id',flat=True)
@@ -108,6 +106,7 @@ class Access(models.Model):
         menus_list=cls.objects.filter(
             access_id__in=access_ids
         ).order_by('sort', 'create_time')
+
 
         ##格式树形结构
         return cls.newformat_tree_data(menus_list,parent_id=0)
@@ -125,14 +124,72 @@ class Access(models.Model):
         return result
 
     @staticmethod
-    def newformat_tree_data(queryset,parent_id=0):
-        """格式树形"""
-        result=[]
-        items=list(queryset.values())
+    def newformat_tree_data(queryset, parent_id=0):
+        """格式化树形结构
+        Args:
+            queryset: Access查询集
+            parent_id: 父级ID
+        Returns:
+            list: 树形结构的菜单列表
+        """
+        result = []
+        items = list(queryset.values())
         for item in items:
-            if item['parent_id']==parent_id:
-                children=Access.format_tree_data(queryset,item['access_id'])
+            if item['parent_id'] == parent_id:
+                children = Access.recursive_menu_array(items, item['access_id'])
                 if children:
-                    item['children']=children
+                    item['children'] = children
                 result.append(item)
-            return result
+
+        return result
+
+###bangtuitui_py_shop_role表
+class Role(models.Model):
+    """角色模型"""
+    role_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100, verbose_name='角色名称')
+    description = models.TextField(blank=True, verbose_name='角色描述')
+    created_at = models.IntegerField(default=0)
+
+    class Meta:
+        db_table = 'bangtuitui_py_shop_role'
+        verbose_name = '角色'
+        app_label = 'permissions'
+
+###bangtuitui_py_shop_user_role表
+class UserRole(models.Model):
+    """用户-角色关联"""
+    id = models.AutoField(primary_key=True)
+    shop_user_id = models.IntegerField()
+    role_id = models.IntegerField()
+    create_time = models.IntegerField(default=0)
+
+    class Meta:
+        db_table = 'bangtuitui_py_shop_user_role'
+        verbose_name = '用户角色关联'
+        app_label = 'permissions'
+
+    @classmethod
+    def get_role_ids(cls, shop_user_id):
+        return cls.objects.filter(
+            shop_user_id=shop_user_id
+        ).values_list('role_id', flat=True)
+
+###bangtuitui_py_shop_role_access表
+class RoleAccess(models.Model):
+    """角色-权限关联"""
+    id = models.AutoField(primary_key=True)
+    role_id = models.IntegerField()
+    access_id = models.IntegerField()
+    created_at = models.IntegerField(default=0)
+
+    class Meta:
+        db_table = 'bangtuitui_py_shop_role_access'
+        verbose_name = '角色权限关联'
+        app_label = 'permissions'
+
+    @classmethod
+    def get_access_ids(cls, role_ids):
+        return cls.objects.filter(
+            role_id__in=role_ids
+        ).values_list('access_id', flat=True)

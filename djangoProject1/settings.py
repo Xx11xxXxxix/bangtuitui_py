@@ -40,9 +40,8 @@ INSTALLED_APPS = [
     'admin.denglu',
     'common',
     'models',
-    'models.authRole',
     'models.goods',
-    'models.Role',
+    'permissions',
 ]
 
 MIDDLEWARE = [

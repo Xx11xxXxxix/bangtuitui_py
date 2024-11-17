@@ -9,7 +9,7 @@ from rest_framework import status
 from common.views import BaseController
 from models.goods.CategoryModel import Category
 from models.goods.GoodsModel import Product
-from services.Authservice import AuthService
+from permissions.serveices import AuthService, PermissionService
 from services.GoodsService import ProductService
 
 
@@ -127,8 +127,10 @@ class RoleView(BaseController):
 
     def get_role_list(self,request):
         try:
-            auth_service=AuthService(self.store)
+            auth_service=PermissionService(self.store)
+
             result=auth_service.get_role_list()
+
             return JsonResponse({'code':1,'msg':'Done','data':result})
         except Exception as e:
             return JsonResponse({'code':0,'msg':str(e)})
