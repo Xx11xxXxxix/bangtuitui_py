@@ -1,6 +1,7 @@
 from typing import List
 from django.db import models
 
+
 class Access(models.Model):
     access_id = models.AutoField(primary_key=True, db_column='access_id')
     name = models.CharField(max_length=255, default='', verbose_name='权限名称')
@@ -16,8 +17,8 @@ class Access(models.Model):
     plus_category_id = models.IntegerField(default=0, blank=True, verbose_name='插件分类id')
     remark = models.CharField(max_length=255, blank=True, verbose_name='描述')
     app_id = models.PositiveIntegerField(default=10001, blank=True, verbose_name='app_id')
-    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
-    update_time = models.DateTimeField(auto_now=True, verbose_name='更新时间')
+    create_time = models.IntegerField(default=0, verbose_name='创建时间')
+    update_time = models.IntegerField(default=0, verbose_name='更新时间')
 
     class Meta:
         db_table = 'bangtuitui_py_shop_access'
@@ -71,3 +72,67 @@ class Access(models.Model):
             }
             tree.append(item)
         return tree
+
+    @classmethod
+    def get_list(cls):
+        all_menus=cls.new_get_all(is_show=1)
+
+        return cls.recursive_menu_array(all_menus,parent_id=0)
+
+    @classmethod
+    def new_get_all(cls,is_show=1):
+        """所有记录"""
+        if is_show==1:
+            queryset=cls.objects.filter(is_show=is_show)
+        else:
+            queryset=cls.objects.all()
+        return list(queryset.order_by('sort', 'create_time').values())
+
+    @classmethod
+    def get_list_by_user(cls,shop_user_id):
+        from models.Role.RoleAccess import RoleAccess
+        from models.User.UserRole import UserRole
+
+        """用户权限菜单"""
+        #用户角色
+        role_ids=UserRole.objects.filter(
+            shop_user_id=shop_user_id,
+        ).values_list('role_id',flat=True)
+
+        #角色权限
+        access_ids=RoleAccess.objects.filter(
+            role_id__in=role_ids,
+        ).values_list('access_id',flat=True)
+
+        #权限菜单
+        menus_list=cls.objects.filter(
+            access_id__in=access_ids
+        ).order_by('sort', 'create_time')
+
+        ##格式树形结构
+        return cls.newformat_tree_data(menus_list,parent_id=0)
+
+    @staticmethod
+    def recursive_menu_array(items,parent_id=0):
+        """递归构建菜单树"""
+        result=[]
+        for item in items:
+            if item['parent_id']==parent_id:
+                children=Access.recursive_menu_array(items,item['access_id'])
+                if children:
+                    item['children']=children
+                result.append(item)
+        return result
+
+    @staticmethod
+    def newformat_tree_data(queryset,parent_id=0):
+        """格式树形"""
+        result=[]
+        items=list(queryset.values())
+        for item in items:
+            if item['parent_id']==parent_id:
+                children=Access.format_tree_data(queryset,item['access_id'])
+                if children:
+                    item['children']=children
+                result.append(item)
+            return result

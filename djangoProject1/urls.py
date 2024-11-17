@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.urls import path,include
 from admin.denglu.views import PassportView
-from admin.goods.GoodsView import ProductView, ProductDetailView, ProductStateView, get_base_data
+from admin.goods.GoodsView import ProductView, ProductDetailView, ProductStateView, get_base_data, RoleView
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
@@ -25,6 +25,7 @@ urlpatterns = [
     path('products/<int:product_id>/', ProductDetailView.as_view(), name='product_detail'),
     path('products/<int:product_id>/state/<int:state>/', ProductStateView.as_view(), name='product_state'),
     path('products/base-data/', get_base_data, name='product_base_data'),
-    path('denglu/login',PassportView.as_view(),name='login')
+    path('denglu/login',PassportView.as_view(),name='login'),
 
+    path('authRole/user/getRoleList', RoleView.as_view(), name='get_role_list'),
 ]

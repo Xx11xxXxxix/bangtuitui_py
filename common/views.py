@@ -54,7 +54,6 @@ class BaseController(View):
             return False
         data = self.check_token(token)
         if data.get('code') != 1:
-            print('get=1')
 
             return False
         user_data = data.get('data')
@@ -159,26 +158,26 @@ class BaseController(View):
 
     @staticmethod
     def check_token(token):
-        print(token)
         key = f"{settings.SECRET_KEY}"  # 使用 SECRET_KEY 和 token_type
 
         try:
             decoded = jwt.decode(token, key, algorithms=["HS256"], options={"verify_exp": True, "leeway": 60})
-            print('打印的', decoded)
+            # print('打印的', decoded)
             return {"code": 1, "data": decoded}
         except InvalidSignatureError:
-            print('签名不正确')
+            # print('签名不正确')
 
             return {"code": -1, "msg": "签名不正确"}
         except ExpiredSignatureError:
-            print('token失效')
+            # print('token失效')
 
             return {"code": -1, "msg": "token失效"}
         except InvalidTokenError:
-            print('token无效  ')
+            # print('token无效  ')
 
             return {"code": -1, "msg": "token无效"}
         except Exception:
-            print('未知错误  ')
+            # print('未知错误  ')
 
             return {"code": -1, "msg": "未知错误"}
+

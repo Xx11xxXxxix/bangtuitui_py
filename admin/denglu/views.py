@@ -16,7 +16,6 @@ class PassportView(View):
         try:
             user_data = json.loads(request.body)
             user_info = User.check_login(user_data)
-            print(user_info)
 
             if user_info:
                 version = get_version()

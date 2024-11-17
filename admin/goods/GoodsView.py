@@ -9,6 +9,7 @@ from rest_framework import status
 from common.views import BaseController
 from models.goods.CategoryModel import Category
 from models.goods.GoodsModel import Product
+from services.Authservice import AuthService
 from services.GoodsService import ProductService
 
 
@@ -17,7 +18,6 @@ class ProductView(BaseController):
     def get(self, request):
         """获取商品列表 (在售)"""
         user = request.user
-        print(user)
         params = request.GET.dict()
 
         # 获取所有商品
@@ -66,6 +66,8 @@ class ProductView(BaseController):
         return Response({'message': message}, status=status.HTTP_400_BAD_REQUEST)
 
 
+
+
 class ProductDetailView(BaseController):
 
     def get(self, request, product_id):
@@ -99,6 +101,7 @@ class ProductDetailView(BaseController):
         return Response({'message': product.get_error() or '删除失败'}, status=status.HTTP_400_BAD_REQUEST)
 
 
+
 class ProductStateView(BaseController):
     def post(self, request, product_id, state):
         """修改商品状态"""
@@ -116,3 +119,17 @@ def get_base_data(request):
     """获取商品基础数据"""
     data = ProductService.get_edit_data()
     return Response(data, status=status.HTTP_200_OK)
+
+##todo 创新的应用权限列表
+class RoleView(BaseController):
+    def get(self,request):
+        return self.get_role_list(request)
+
+    def get_role_list(self,request):
+        try:
+            auth_service=AuthService(self.store)
+            result=auth_service.get_role_list()
+            return JsonResponse({'code':1,'msg':'Done','data':result})
+        except Exception as e:
+            return JsonResponse({'code':0,'msg':str(e)})
+

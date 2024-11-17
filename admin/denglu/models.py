@@ -28,7 +28,6 @@ class User(models.Model):
         managed = False##数据库迁移不用这个表
     @classmethod
     def check_login(cls, user_data):
-        print(user_data)
         try:
             user = cls.objects.get(
                 user_name=user_data.get('username'),
@@ -42,7 +41,6 @@ class User(models.Model):
             return user
 
         except cls.DoesNotExist:
-            print(11)
             cls.error = '用户名或密码错误'
             return False
 

@@ -28,6 +28,20 @@ class AuthService:
         ]
         self.access_urls = []
 
+
+    def get_role_list(self):
+        """权限列表哦"""
+        user=self.store['user']
+        if self.user.is_super:
+            menus=Access.get_list()
+        else:
+            menus=Access.get_list_by_user(user['shop_user_id'])
+
+            for menu in menus:
+                if menu.get('redirect_name')!=menu.get('children',[{}])[0].get('path'):
+                    menu['redirect_name']=menu.get('children',[{}])[0].get('path')
+        return {'可访问的路径':menus}
+
     @classmethod
     def get_instance(cls, store):
         """获取 AuthService 的单例实例"""
