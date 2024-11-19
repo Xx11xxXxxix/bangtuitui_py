@@ -28,4 +28,7 @@ urlpatterns = [
     path('denglu/login',PassportView.as_view(),name='login'),
 
     path('authRole/user/getRoleList', RoleView.as_view(), name='get_role_list'),
+
+
+    path('netease/', include('netease_login.urls')),
 ]
