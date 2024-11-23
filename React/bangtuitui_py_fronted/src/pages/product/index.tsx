@@ -20,7 +20,7 @@ const ProductPage: React.FC = () => {
 
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:3000/artist/top/song?id=6452`);
+      const response = await axios.get(`http://127.0.0.1:3000/artist/top/song?id=6452`);
       setSongs(response.data.songs || []);
     } catch (error) {
       message.error('获取歌曲失败');

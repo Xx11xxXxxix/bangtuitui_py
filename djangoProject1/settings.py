@@ -104,7 +104,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',  # 数据库类型
         'NAME': 'bangtuitui_py',  # 数据库名
         'USER': 'root',  # 用户名
-        'PASSWORD': 'root',  # 密码
+        'PASSWORD': '123123',  # 密码
         'HOST': 'localhost',  # 数据库服务器地
         'PORT': 3306,
     }
