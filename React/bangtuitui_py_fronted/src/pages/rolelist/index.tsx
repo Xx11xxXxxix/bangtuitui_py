@@ -13,6 +13,7 @@ import {
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import type { MenuItem } from '../types/menu';
+import NeteaseUserInfo from '@/components/netease_userInfo';
 
 const { Header, Sider, Content } = Layout;
 
@@ -72,7 +73,6 @@ const RoleList: React.FC = () => {
     try {
       const response = await fetch('http://localhost:8000/authRole/user/getRoleList', {
         headers: {
-          'token': `localStorage.getItem('token')`,
           'token': localStorage.getItem('token')
         }
       });
@@ -107,80 +107,92 @@ const RoleList: React.FC = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Header style={{ 
-        padding: 0, 
-        background: '#fff', 
-        height: 64,
-        boxShadow: '0 1px 4px rgba(0,21,41,.08)',
-        position: 'fixed',
-        zIndex: 1,
-        width: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <div style={{ 
-            width: 256, 
-            height: 64, 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            borderRight: '1px solid #f0f0f0'
-          }}>
-            <h1 style={{ margin: 0, fontSize: 20, fontWeight: 'bold' }}>灌灌灌灌灌</h1>
-          </div>
-          {React.createElement(
-            collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-            {
-              className: 'trigger',
-              style: { padding: '0 24px', fontSize: 18, cursor: 'pointer' },
-              onClick: () => setCollapsed(!collapsed),
-            }
-          )}
+    <Header style={{ 
+      padding: 0, 
+      background: '#fff', 
+      height: 64,
+      boxShadow: '0 1px 4px rgba(0,21,41,.08)',
+      position: 'fixed',
+      zIndex: 1,
+      width: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between'
+    }}>
+      {/* 左侧 Logo 和折叠按钮 */}
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div style={{ 
+          width: 200, 
+          height: 64, 
+          display: 'flex', 
+          alignItems: 'center', 
+          paddingLeft: 24,
+          borderRight: '1px solid #f0f0f0'
+        }}>
+          <h1 style={{ margin: 0, fontSize: 20, fontWeight: 'bold' }}>灌灌灌灌灌</h1>
         </div>
-        <div style={{ padding: '0 24px' }}>
-          <UserOutlined style={{ fontSize: 18 }} />
+        <div className="trigger" style={{ padding: '0 24px', cursor: 'pointer' }}>
+          {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+        </div>
+      </div>
+
+      {/* 右侧用户信息 */}
+      <div style={{ display: 'flex', alignItems: 'center', paddingRight: 24 }}>
+        <NeteaseUserInfo />
+        <div style={{ marginLeft: 24, display: 'flex', alignItems: 'center' }}>
+          <UserOutlined style={{ fontSize: 16 }} />
           <span style={{ marginLeft: 8 }}>管理员</span>
         </div>
-      </Header>
-      <Layout style={{ marginTop: 64 }}>
-        <Sider
-          trigger={null}
-          collapsible
-          collapsed={collapsed}
-          style={{
-            overflow: 'auto',
-            height: '100vh',
-            position: 'fixed',
-            left: 0,
-            top: 64,
-            bottom: 0,
-            background: '#fff'
+      </div>
+    </Header>
+
+    <Layout>
+      {/* 侧边栏 */}
+      <Sider
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
+        style={{
+          background: '#fff',
+          position: 'fixed',
+          left: 0,
+          top: 64,
+          height: 'calc(100vh - 64px)',
+          zIndex: 10,
+          boxShadow: '2px 0 8px 0 rgba(29,35,41,.05)'
+        }}
+        width={200}
+      >
+        <Menu
+          mode="inline"
+          theme="light"
+          defaultSelectedKeys={[location.pathname]}
+          defaultOpenKeys={menuItems.map(item => item.path)}
+          style={{ 
+            height: '100%', 
+            borderRight: 0,
+            paddingTop: 16 
           }}
-          width={256}
-        >
-          <Menu
-            mode="inline"
-            theme="light"
-            defaultSelectedKeys={[location.pathname]}
-            defaultOpenKeys={menuItems.map(item => item.path)}
-            style={{ height: '100%', borderRight: 0 }}
-            items={transformMenuItems(menuItems)}
-            onClick={handleMenuClick}
-          />
-        </Sider>
-        <Layout style={{ padding: '24px', marginLeft: collapsed ? 80 : 256 }}>
-          <Content
-            style={{
-              padding: 24,
-              margin: 0,
-              minHeight: 280,
-              background: '#fff',
-              borderRadius: 4,
-              transition: 'all 0.2s'
-            }}
-          >
+          items={transformMenuItems(menuItems)}
+          onClick={handleMenuClick}
+        />
+      </Sider>
+
+
+      {/* 主内容区 */}
+      <Layout style={{ 
+        marginLeft: collapsed ? 80 : 200,
+        marginTop: 64,
+        padding: '24px',
+        background: '#f0f2f5'
+      }}>
+        <Content style={{
+          background: '#fff',
+          padding: 24,
+          minHeight: 'calc(100vh - 112px)',
+          borderRadius: 4,
+          boxShadow: '0 1px 2px 0 rgba(0,0,0,0.03)'
+        }}>
             <Outlet />
           </Content>
         </Layout>

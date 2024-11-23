@@ -127,15 +127,54 @@ def extract_music_u(cookies):
    match = re.search(pattern, cookies)
    return match.group(1) if match else None
 
+#
+# async def get_user_info1(music_u):
+#     #todo 测试用cookie别几把老调容易封号
+#     # url = f"{BASE_URL}/user/account?cookie=MUSIC_U=009B0CEDEE0769E534E6C0FD6488ECF21E6B0B450EB9AF4AB77853E7A1D5A25051BA4FCB535A2F4B1D9CFE43ADB0B76BD80070EF33916DC4EAF07F32654CEFE6695864A1BFA5F304EA60E790B96068226220292B8C24150E54383C4EEEE2DA0D27A842227D5068B047BE0923FE3B91D90C24BAA31A721CDB74C427D9C2161FF576F37D2C2BA3E6417F11E4723F02533937C4C0B6A7BD43D8F4A3F37A7AB176D5FF5CCE2CEFC9F7B529337767EDFF18E0A8853A82853262E7A9E954E3E70ED6A829E2BF8219F9FF50E8BE1CF5468BD7479201752252F5BDC38E13A433C7B270DF9DEA6FB3C9CC257940B488C63F4FEC47B57A01B0428D1D6780245CFB65F278653ABB857367A5BCE5A5580972346370B1EF7B43ED9D8A325DE5982E5002095D6E"
+#
+#     url = f"{BASE_URL}/user/account?cookie={music_u}"
+#     headers = {'Cookie': f'MUSIC_U={music_u}'}
+#     try:
+#         response = await sync_to_async(requests.get)(url)
+#         data = await sync_to_async(lambda: response.json())()
+#
+#         await EaseapiLog.async_api_log(
+#             api_name='get_user_info',
+#             request_params={'music_u': music_u},
+#             response_data=data or {},
+#             status_code=data.get('code', -1) if data else -1
+#         )
+#
+#         if data and data.get('code') == 200:
+#             profile = data.get('profile')
+#             if profile:
+#                 await sync_to_async(EaseapiUser.update_user)(profile, music_u)
+#         return JsonResponse(data or {})
+#     except Exception as e:
+#         print("报错:", str(e))
+#         await EaseapiLog.async_api_log(
+#             api_name='get_user_info',
+#             request_params={'music_u': music_u},
+#             response_data={},
+#             status_code=-1,
+#             error_message=str(e)
+#         )
+#         return JsonResponse({'code': -1, 'msg': str(e)})
 
-async def get_user_info(music_u):
-    #todo 测试用cookie别几把老调容易封号
-    # url = f"{BASE_URL}/user/account?cookie=MUSIC_U=009B0CEDEE0769E534E6C0FD6488ECF21E6B0B450EB9AF4AB77853E7A1D5A25051BA4FCB535A2F4B1D9CFE43ADB0B76BD80070EF33916DC4EAF07F32654CEFE6695864A1BFA5F304EA60E790B96068226220292B8C24150E54383C4EEEE2DA0D27A842227D5068B047BE0923FE3B91D90C24BAA31A721CDB74C427D9C2161FF576F37D2C2BA3E6417F11E4723F02533937C4C0B6A7BD43D8F4A3F37A7AB176D5FF5CCE2CEFC9F7B529337767EDFF18E0A8853A82853262E7A9E954E3E70ED6A829E2BF8219F9FF50E8BE1CF5468BD7479201752252F5BDC38E13A433C7B270DF9DEA6FB3C9CC257940B488C63F4FEC47B57A01B0428D1D6780245CFB65F278653ABB857367A5BCE5A5580972346370B1EF7B43ED9D8A325DE5982E5002095D6E"
 
-    # url = f"{BASE_URL}/user/account?cookie=MUSIC_U={music_u}"
-    # headers = {'Cookie': f'MUSIC_U={music_u}'}
+async def get_user_info(request):
     try:
-        response = await sync_to_async(requests.get)(url)
+        music_u = request.GET.get('cookie', '')
+        if not music_u:
+            return JsonResponse({'code': -1, 'msg': '没cookie'})
+
+        if music_u.startswith('MUSIC_U='):
+            music_u = music_u[8:]
+
+        url = f"{BASE_URL}/user/account?cookie=MUSIC_U={music_u}"
+        headers = {'Cookie': f'MUSIC_U={music_u}'}
+
+        response = await sync_to_async(requests.get)(url, headers=headers)
         data = await sync_to_async(lambda: response.json())()
 
         await EaseapiLog.async_api_log(
@@ -151,7 +190,7 @@ async def get_user_info(music_u):
                 await sync_to_async(EaseapiUser.update_user)(profile, music_u)
         return JsonResponse(data or {})
     except Exception as e:
-        print("又几把报错操:", str(e))
+        print("报错:", str(e))
         await EaseapiLog.async_api_log(
             api_name='get_user_info',
             request_params={'music_u': music_u},
