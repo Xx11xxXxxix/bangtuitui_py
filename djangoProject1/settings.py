@@ -100,7 +100,7 @@ TEMPLATES = [
     },
 ]
 WSGI_APPLICATION = 'djangoProject1.wsgi.application'
-
+#sasaassa
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
