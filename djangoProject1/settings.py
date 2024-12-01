@@ -46,8 +46,14 @@ INSTALLED_APPS = [
     'corsheaders',
     'music_api',
     'netease_login',
-
+    'accounts',
+    'User_login',
+    'rest_framework',
+    'rest_framework.authtoken',
 ]
+
+
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -104,7 +110,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',  # 数据库类型
         'NAME': 'bangtuitui_py',  # 数据库名
         'USER': 'root',  # 用户名
-        'PASSWORD': '123123',  # 密码
+        'PASSWORD': '88888888',  # 密码
         'HOST': 'localhost',  # 数据库服务器地
         'PORT': 3306,
     }
@@ -113,18 +119,32 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
+# AUTH_PASSWORD_VALIDATORS = [
+#     {
+#         'NAME': 'django.contrib.authRole.password_validation.UserAttributeSimilarityValidator',
+#     },
+#     {
+#         'NAME': 'django.contrib.authRole.password_validation.MinimumLengthValidator',
+#     },
+#     {
+#         'NAME': 'django.contrib.authRole.password_validation.CommonPasswordValidator',
+#     },
+#     {
+#         'NAME': 'django.contrib.authRole.password_validation.NumericPasswordValidator',
+#     },
+# ]
+UTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.authRole.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.authRole.password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.authRole.password_validation.CommonPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.authRole.password_validation.NumericPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 

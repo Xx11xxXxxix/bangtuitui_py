@@ -50,6 +50,8 @@ const neteaseLogin: React.FC = () => {
       if (data.code === 803) {
         // Done
         localStorage.setItem('netease_cookie', data.cookie);
+
+
         navigate('/');
       } else if (data.code === 800) {
         // 二维码过期

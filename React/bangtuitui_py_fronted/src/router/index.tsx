@@ -3,6 +3,7 @@ import { createBrowserRouter, Navigate, RouteObject } from 'react-router-dom';
 import Login from '../pages/login/login';
 import RoleList from '../pages/rolelist';
 import ProductPage from '../pages/product';  
+import Product2Page from '../pages/product2';
 import NeteaseLogin from '../pages/netease';
 
 const AuthLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -45,6 +46,10 @@ const routes: RouteObject[] = [
       {
         path: 'netease',
         element: <NeteaseLogin />
+      },
+      {
+        path: 'product2',
+        element: <Product2Page />
       }
     ]
   },

@@ -15,6 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path,include
+from accounts import views
 from admin.denglu.views import PassportView
 from admin.goods.GoodsView import ProductView, ProductDetailView, ProductStateView, get_base_data, RoleView
 
@@ -26,9 +27,9 @@ urlpatterns = [
     path('products/<int:product_id>/state/<int:state>/', ProductStateView.as_view(), name='product_state'),
     path('products/base-data/', get_base_data, name='product_base_data'),
     path('denglu/login',PassportView.as_view(),name='login'),
-
     path('authRole/user/getRoleList', RoleView.as_view(), name='get_role_list'),
-
-
     path('netease/', include('netease_login.urls')),
+    path('register/', views.register_user, name='register_user'),
+    path('accounts/', include('accounts.urls')),  # 注册模块
+    path('user_login/', include('User_login.urls')),  # 登录模块
 ]

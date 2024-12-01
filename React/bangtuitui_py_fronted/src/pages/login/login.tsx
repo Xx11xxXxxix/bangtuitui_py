@@ -11,7 +11,7 @@ const Login = () => {
   const onFinish = async (values: { username: string; password: string }) => {
     setLoading(true);
     try {
-      const response = await axios.post('http://127.0.0.1:8000/denglu/login', {
+      const response = await axios.post('http://localhost:8000/denglu/login', {
         username: values.username,
         password: values.password
       });

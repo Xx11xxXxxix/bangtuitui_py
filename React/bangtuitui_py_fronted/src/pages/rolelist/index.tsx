@@ -71,7 +71,7 @@ const RoleList: React.FC = () => {
 
   const fetchMenus = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/authRole/user/getRoleList', {
+      const response = await fetch('http://localhost:8000/authRole/user/getRoleList', {
         headers: {
           'token': localStorage.getItem('token')
         }
