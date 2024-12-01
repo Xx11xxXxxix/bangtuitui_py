@@ -1,5 +1,9 @@
 import json
+import random
+
+from django.conf import settings
 from django.http import QueryDict
+
 
 def get_request_data(request):
     """
@@ -14,10 +18,10 @@ def get_request_data(request):
         if content_type == 'application/json':
             # 解析 JSON 数据
             try:
-                body_unicode=request.body.decode('utf-8')
-                body_data=json.loads(body_unicode)
+                body_unicode = request.body.decode('utf-8')
+                body_data = json.loads(body_unicode)
                 return body_data
-            except (json.JSONDecodeError,UnicodeDecodeError)as e:
+            except (json.JSONDecodeError, UnicodeDecodeError) as e:
                 print(f"error:{e}")
                 return {'error': 'Invalid JSON format'}
         elif content_type == 'application/x-www-form-urlencoded' or content_type == 'multipart/form-data':
@@ -28,6 +32,7 @@ def get_request_data(request):
         return "1.0.0"
 
     return {}
+
 
 
 def get_version():

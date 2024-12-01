@@ -28,7 +28,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # React
+    "http://localhost:5173",  # Reac    qt
     "http://localhost:3020",  #node
 ]
 
@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'netease_login',
     'accounts',
     'User_login',
-    'django-simple-captcha',
+    'captcha',
 ]
 
 
@@ -108,7 +108,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',  # 数据库类型
         'NAME': 'bangtuitui_py',  # 数据库名
         'USER': 'root',  # 用户名
-        'PASSWORD': '88888888',  # 密码
+        'PASSWORD': '123123',  # 密码
         'HOST': 'localhost',  # 数据库服务器地
         'PORT': 3306,
     }

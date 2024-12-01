@@ -33,6 +33,8 @@ urlpatterns = [
     path('authRole/user/getRoleList', RoleView.as_view(), name='get_role_list'),
     path('netease/', include('netease_login.urls')),
     path('register/', views.register_user, name='register_user'),
+    path('send_sms_code/', views.send_sms_code, name='send_sms_code'),
+
     # 登录模块
     path('user_login/', include('User_login.urls')),
 

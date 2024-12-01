@@ -1,12 +1,21 @@
-from captcha import models
-from django.shortcuts import render
+from django.core.cache import cache
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.contrib.auth.hashers import make_password
-
+from common.views import generate_code
 from accounts.models import AccountsUser
-from captcha.models import CaptchaStore
+
+
+def send_sms_code(request):
+    data = json.loads(request.body)
+    phone_number = data.get('phone_number')
+    code = generate_code(phone_number)
+    print(code)
+    return JsonResponse({
+        'code': code,
+        'msg': 'code-DONE!'
+    })
 
 
 @csrf_exempt
@@ -17,14 +26,18 @@ def register_user(request):
         username = data.get('username')
         password = data.get('password')
         captcha_response = data.get('captcha')  # 用户提交的验证码
-
+        code = data.get('code')
+        cache_key = f'sms_code_{phone_number}'
+        cached_code = cache.get(cache_key)
+        if code != cached_code:
+            return JsonResponse({'code': '0', 'msg': 'CODE-WRONG'})
         # 检查必要字段
-        if not phone_number or not password or not captcha_response:
-            return JsonResponse({'status': 'fail', 'message': '缺少手机号、密码或验证码'}, status=400)
-
-        # 验证验证码
-        if not CaptchaStore.objects.filter(response=captcha_response).exists():
-            return JsonResponse({'status': 'fail', 'message': '验证码错误'}, status=400)
+        # if not phone_number or not password or not captcha_response:
+        #     return JsonResponse({'status': 'fail', 'message': '缺少手机号、密码或验证码'}, status=400)
+        # print(captcha_response)
+        # # 验证验证码
+        # if not CaptchaStore.objects.filter(response=captcha_response).exists():
+        #     return JsonResponse({'status': 'fail', 'message': 'yanzhengmacuo'}, status=400)
 
         # 检查用户是否已存在
         try:

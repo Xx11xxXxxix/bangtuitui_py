@@ -1,3 +1,4 @@
+import random
 import time
 
 import jwt
@@ -185,3 +186,18 @@ class BaseController(View):
 
             return {"code": -1, "msg": "未知错误"}
 
+
+def generate_code(mobile):
+    code = ''.join([str(random.randint(0, 9)) for _ in range(4)])
+    cache_key = f'sms_code_{mobile}'
+    cache.set(cache_key, code, timeout=300)
+    return code
+def verify_code(mobile, code):
+    cache_key = f'sms_code_{mobile}'
+    cached_code = cache.get(cache_key)
+    if not cached_code:
+        return False
+    if code == cached_code:
+        cache.delete(cache_key)
+        return True
+    return False

@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import check_password
@@ -17,14 +18,18 @@ def login_user(request):
             phone_number = data.get('phone_number')
             password = data.get('password')
             captcha_response = data.get('captcha')  # 用户提交的验证码
-
+            code = data.get('code')
+            cache_key = f'sms_code_{phone_number}'
+            cached_code = cache.get(cache_key)
+            if code != cached_code:
+                return JsonResponse({'code': '0', 'msg': 'CODE-WRONG'})
             # 检查必要的字段是否存在
-            if not phone_number or not password:
-                return JsonResponse({'status': 'fail', 'message': '缺少手机号或密码'}, status=400)
-
-            # 验证验证码
-            if not CaptchaStore.objects.filter(response=captcha_response).exists():
-                return JsonResponse({'status': 'fail', 'message': '验证码错误'}, status=400)
+            # if not phone_number or not password:
+            #     return JsonResponse({'status': 'fail', 'message': '缺少手机号或密码'}, status=400)
+            #
+            # # 验证验证码
+            # if not CaptchaStore.objects.filter(response=captcha_response).exists():
+            #     return JsonResponse({'status': 'fail', 'message': 'meiyanzhengma'}, status=400)
 
             # 检查用户是否存在
             try:
