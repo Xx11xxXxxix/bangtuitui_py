@@ -37,28 +37,45 @@ def login_user(request):
                 print(f"User found: {user}")
             except AccountsUser.DoesNotExist:
                 print(f"User with phone number {phone_number} 这个表.")
-                return JsonResponse({'status': 'fail', 'message': '用户不存在'}, status=400)
+                return JsonResponse({'status': 'fail', 'msg': '用户不存在'}, status=400)
 
             # 验证密码是否正确
             if not check_password(password, user.password):
-                return JsonResponse({'status': 'fail', 'message': '密码错误'}, status=400)
+                return JsonResponse({'status': 'fail', 'msg': '密码错误'}, status=400)
 
             # 创建并保存用户的 token
             user.token = BaseController.sign_token(user.uid)
-
+            #
+            # return JsonResponse({
+            #     'code':1,
+            #     'status': 'success',
+            #     'msg': '登录成功',
+            #     'token': user.token,
+            #     'uid': user.uid,
+            #     'username': user.username
+            # })
+            #todo 应该是几把要改返回内容忘了都要啥了
             return JsonResponse({
-                'status': 'success',
-                'message': '登录成功',
-                'token': user.token,
-                'uid': user.uid,
-                'username': user.username
+                'code': 1,
+                'msg': '登录成功',
+                'data': {
+                    # 'app_id': user_info.app_id,
+                    # 'user_name': user_info.user_name,
+                    # 'token': user_info.token,
+                    # 'version': version,
+                    # 'platform_code': user_info.platform_code,
+                    # 'is_super': user_info.is_super
+                    'token': user.token,
+                    'uid': user.uid,
+                    'username': user.username
+                }
             })
 
         except json.JSONDecodeError:
-            return JsonResponse({'status': 'fail', 'message': '请求体不是有效的JSON'}, status=400)
+            return JsonResponse({'status': 'fail', 'msg': '请求体不是有效的JSON'}, status=400)
 
         except Exception as e:
             # 捕获所有其他异常并返回信息
-            return JsonResponse({'status': 'fail', 'message': '服务器错误', 'error': str(e)}, status=500)
+            return JsonResponse({'status': 'fail', 'msg': '服务器错误', 'error': str(e)}, status=500)
 
-    return JsonResponse({'status': 'fail', 'message': '仅支持POST请求'}, status=400)
+    return JsonResponse({'status': 'fail', 'msg': '仅支持POST请求'}, status=400)

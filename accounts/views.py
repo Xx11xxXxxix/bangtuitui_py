@@ -13,8 +13,8 @@ def send_sms_code(request):
     code = generate_code(phone_number)
     print(code)
     return JsonResponse({
-        'code': code,
-        'msg': 'code-DONE!'
+        'code': 1,
+        'msg': code
     })
 
 
