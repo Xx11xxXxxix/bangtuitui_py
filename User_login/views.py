@@ -9,10 +9,6 @@ import json
 def login_user(request):
     if request.method == 'POST':
         try:
-            # 检查请求体是否为空
-            if not request.body:
-                return JsonResponse({'status': 'fail', 'message': '请求体为空'}, status=400)
-
             # 获取请求体中的数据
             data = json.loads(request.body)
             phone_number = data.get('phone_number')
@@ -25,23 +21,24 @@ def login_user(request):
             # 检查用户是否存在
             try:
                 user = AccountsUser.objects.get(phone_number=phone_number)
-                print(f"User with phone number {phone_number} does not exist.")
-
             except AccountsUser.DoesNotExist:
-                print(f"User with phone number {phone_number} does not exist.")
+                print(f"User with phone number {phone_number} 这个表.")
                 return JsonResponse({'status': 'fail', 'message': '用户不存在'}, status=400)
 
             # 验证密码是否正确
             if not check_password(password, user.password):
+                print(password)
+                print(user.password)
+                print(222)
                 return JsonResponse({'status': 'fail', 'message': '密码错误'}, status=400)
 
             # 获取或创建 Token
-            token, created = Token.objects.get_or_create(user=user)
+            # token, created = Token.objects.get_or_create(user=user)
 
             return JsonResponse({
                 'status': 'success',
                 'message': '登录成功',
-                'token': token.key,
+                # 'token': token.key,
                 'uid': user.uid,
                 'username': user.username
             })
