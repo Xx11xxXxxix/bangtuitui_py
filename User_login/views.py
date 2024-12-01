@@ -1,8 +1,8 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import check_password
-from rest_framework.authtoken.models import Token
 from accounts.models import AccountsUser  # 导入 AccountsUser 模型
+from captcha.models import CaptchaStore
 import json
 
 from common.views import BaseController
@@ -16,10 +16,15 @@ def login_user(request):
             data = json.loads(request.body)
             phone_number = data.get('phone_number')
             password = data.get('password')
+            captcha_response = data.get('captcha')  # 用户提交的验证码
 
             # 检查必要的字段是否存在
             if not phone_number or not password:
                 return JsonResponse({'status': 'fail', 'message': '缺少手机号或密码'}, status=400)
+
+            # 验证验证码
+            if not CaptchaStore.objects.filter(response=captcha_response).exists():
+                return JsonResponse({'status': 'fail', 'message': '验证码错误'}, status=400)
 
             # 检查用户是否存在
             try:
@@ -31,13 +36,7 @@ def login_user(request):
 
             # 验证密码是否正确
             if not check_password(password, user.password):
-                print(password)
-                print(user.password)
-                print(222)
                 return JsonResponse({'status': 'fail', 'message': '密码错误'}, status=400)
-
-            # 获取或创建 Token
-            #token, created = Token.objects.get_or_create(user=user)
 
             # 创建并保存用户的 token
             user.token = BaseController.sign_token(user.uid)

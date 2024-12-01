@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'netease_login',
     'accounts',
     'User_login',
-    'captcha',
+    'django-simple-captcha',
 ]
 
 

@@ -20,6 +20,7 @@ import User_login
 from accounts import views
 from admin.denglu.views import PassportView
 from admin.goods.GoodsView import ProductView, ProductDetailView, ProductStateView, get_base_data, RoleView
+from captcha.views import captcha_image
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
@@ -34,5 +35,7 @@ urlpatterns = [
     path('register/', views.register_user, name='register_user'),
     # 登录模块
     path('user_login/', include('User_login.urls')),
+
+    path('captcha/', captcha_image, name='captcha'),
 
 ]

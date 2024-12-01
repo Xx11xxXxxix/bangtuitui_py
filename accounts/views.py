@@ -1,9 +1,12 @@
+from captcha import models
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.contrib.auth.hashers import make_password
+
 from accounts.models import AccountsUser
+from captcha.models import CaptchaStore
 
 
 @csrf_exempt
@@ -13,11 +16,26 @@ def register_user(request):
         phone_number = data.get('phone_number')
         username = data.get('username')
         password = data.get('password')
+        captcha_response = data.get('captcha')  # 用户提交的验证码
 
+        # 检查必要字段
+        if not phone_number or not password or not captcha_response:
+            return JsonResponse({'status': 'fail', 'message': '缺少手机号、密码或验证码'}, status=400)
 
-        # 检查是否已经注册
-        if AccountsUser.objects.filter(phone_number=phone_number).exists():
-            return JsonResponse({'status': 'fail', 'message': '手机号已注册'}, status=400)
+        # 验证验证码
+        if not CaptchaStore.objects.filter(response=captcha_response).exists():
+            return JsonResponse({'status': 'fail', 'message': '验证码错误'}, status=400)
+
+        # 检查用户是否已存在
+        try:
+            user = AccountsUser.objects.get(phone_number=phone_number)
+            return JsonResponse({'status': 'fail', 'message': '用户已存在'}, status=400)
+        except AccountsUser.DoesNotExist:
+            pass  # 用户不存在
+
+        # # 检查是否已经注册
+        # if AccountsUser.objects.filter(phone_number=phone_number).exists():
+        #     return JsonResponse({'status': 'fail', 'message': '手机号已注册'}, status=400)
 
         # 创建用户并保存到数据库
         hashed_password = make_password(password)
