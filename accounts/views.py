@@ -3,7 +3,6 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.contrib.auth.hashers import make_password
-
 from accounts.models import AccountsUser
 
 
@@ -14,6 +13,7 @@ def register_user(request):
         phone_number = data.get('phone_number')
         username = data.get('username')
         password = data.get('password')
+
 
         # 检查是否已经注册
         if AccountsUser.objects.filter(phone_number=phone_number).exists():

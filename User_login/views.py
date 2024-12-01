@@ -5,6 +5,9 @@ from rest_framework.authtoken.models import Token
 from accounts.models import AccountsUser  # 导入 AccountsUser 模型
 import json
 
+from common.views import BaseController
+
+
 @csrf_exempt
 def login_user(request):
     if request.method == 'POST':
@@ -21,6 +24,7 @@ def login_user(request):
             # 检查用户是否存在
             try:
                 user = AccountsUser.objects.get(phone_number=phone_number)
+                print(f"User found: {user}")
             except AccountsUser.DoesNotExist:
                 print(f"User with phone number {phone_number} 这个表.")
                 return JsonResponse({'status': 'fail', 'message': '用户不存在'}, status=400)
@@ -33,12 +37,15 @@ def login_user(request):
                 return JsonResponse({'status': 'fail', 'message': '密码错误'}, status=400)
 
             # 获取或创建 Token
-            # token, created = Token.objects.get_or_create(user=user)
+            #token, created = Token.objects.get_or_create(user=user)
+
+            # 创建并保存用户的 token
+            user.token = BaseController.sign_token(user.uid)
 
             return JsonResponse({
                 'status': 'success',
                 'message': '登录成功',
-                # 'token': token.key,
+                'token': user.token,
                 'uid': user.uid,
                 'username': user.username
             })

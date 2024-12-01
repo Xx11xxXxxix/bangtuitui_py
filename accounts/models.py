@@ -12,5 +12,5 @@ class AccountsUser(models.Model):
     class Meta:
         db_table = 'bangtuitui_py_easeapi_accounts_user'
 
-    def __str__(self):
-        return self.username
+    # def __str__(self):
+    #     return self.username
